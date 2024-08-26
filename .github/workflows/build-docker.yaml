@@ -1,7 +1,12 @@
 name: build and publish image to docker
 
 on:
-  workflow_dispatch
+  push:
+   branches:
+   - main
+   paths:
+    - 'api/Dockerfile'
+    - 'front-end-nextjs/Dockerfile'
 
 jobs:
   publish_images:
