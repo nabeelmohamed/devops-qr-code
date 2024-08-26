@@ -1,0 +1,16 @@
+name: build and publish image to docker
+
+on:
+  [workflows_dispatch]
+
+jobs:
+  publish_images:
+    runs-on: ubuntu-latest  
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: build image
+      run: docker build ./api/ -t nabeelmohamed/devops-qr-code-api:latest
+    - name: publish image to docker
+      run: |
+         docker push nabeelmohamed/devops-qr-code-api:latest
