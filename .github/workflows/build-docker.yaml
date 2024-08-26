@@ -7,6 +7,7 @@ jobs:
   publish_images:
     runs-on: ubuntu-latest  
     steps:
+<<<<<<< HEAD
     - name: Checkout code
       uses: actions/checkout@v4
     - name: build image
@@ -18,3 +19,16 @@ jobs:
          docker login -u nabeelmohamed -p ${{secrets.SECRET_GITHUB_TOKEN}}
          docker push nabeelmohamed/devops-qr-code-api:latest
          docker push nabeelmohamed/devops-qr-code-frontend:latest
+=======
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build image
+        run: |
+         docker build ./api/ -t nabeelmohamed/devops-qr-code-api:latest
+         docker build ./front-end-nextjs/ -t nabeelmohamed/devops-qr-code-frontend:latest
+      - name: Publish image to Docker Hub
+        run: |
+          docker login -u nabeelmohamed -p ${{secrets.SECRET_GITHUB_TOKEN}}
+          docker push nabeelmohamed/devops-qr-code-api:latest
+          docker push nabeelmohamed/devops-qr-code-frontend:latest
+>>>>>>> 8da3ba5f86c66012113ca802711c7b8307d6150a
