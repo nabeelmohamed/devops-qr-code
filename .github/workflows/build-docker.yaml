@@ -18,4 +18,3 @@ jobs:
          docker login -u nabeelmohamed -p ${{secrets.SECRET_GITHUB_TOKEN}}
          docker push nabeelmohamed/devops-qr-code-api:latest
          docker push nabeelmohamed/devops-qr-code-frontend:latest
-                                           
