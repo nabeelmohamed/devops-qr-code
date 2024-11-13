@@ -1,5 +1,5 @@
-resource "aws_iam_role_policy_attachment" "iam-policy" {
-  role = aws_iam_role.iam-role.name
-  # Just for testing purpose, don't try to give administrator access
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+resource "aws_iam_policy" "jump_server_policy" {
+  name        = "jump-server-policy"
+  description = "Policy for jump server access to EKS and AWS resources"
+  policy      = file("jump-server-policy.json")  # JSON file with necessary permissions
 }
