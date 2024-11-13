@@ -1,17 +1,41 @@
-resource "aws_security_group" "security-group" {
+resource "aws_security_group" "jump_server_sg" {
   vpc_id      = aws_vpc.vpc.id
-  description = "Allowing Jenkins, Sonarqube, SSH Access"
+  description = "Allowing SSH, Jenkins, SonarQube, HTTP, and monitoring access"
 
   ingress = [
-    for port in [22, 8080, 9000, 9090, 80] : {
-      description      = "TLS from VPC"
-      from_port        = port
-      to_port          = port
+    {
+      description      = "SSH Access"
+      from_port        = 22
+      to_port          = 22
       protocol         = "tcp"
-      ipv6_cidr_blocks = ["::/0"]
-      self             = false
-      prefix_list_ids  = []
-      security_groups  = []
+      cidr_blocks      = ["0.0.0.0/0"]
+    },
+    {
+      description      = "Jenkins Access"
+      from_port        = 8080
+      to_port          = 8080
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+    },
+    {
+      description      = "SonarQube Access"
+      from_port        = 9000
+      to_port          = 9000
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+    },
+    {
+      description      = "Prometheus Access"
+      from_port        = 9090
+      to_port          = 9090
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+    },
+    {
+      description      = "HTTP Access"
+      from_port        = 80
+      to_port          = 80
+      protocol         = "tcp"
       cidr_blocks      = ["0.0.0.0/0"]
     }
   ]
