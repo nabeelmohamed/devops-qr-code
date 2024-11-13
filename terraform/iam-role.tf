@@ -14,3 +14,8 @@ resource "aws_iam_role" "jump_server_role" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "jump_server_policy_attachment" {
+  role       = aws_iam_role.jump_server_role.name
+  policy_arn = aws_iam_policy.jump_server_policy.arn
+}
