@@ -1,0 +1,54 @@
+name: Terraform Automation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.tf'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.tf'
+
+  workflow_dispatch:
+    inputs:
+      resource_type:
+        description: 'Type of resource to target (e.g., aws_security_group)'
+        required: true
+        default: ''
+      resource_name:
+        description: 'Name of resource to target (e.g., jump_server_sg)'
+        required: true
+        default: ''
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -target=${{ inputs.resource_type }}.${{ inputs.resource_name }} -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
