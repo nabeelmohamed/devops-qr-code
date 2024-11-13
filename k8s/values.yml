@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  repository: <your-docker-hub-username>
+  pullPolicy: IfNotPresent
+
+api:
+  image: api
+  tag: "latest"
+  port: 8000
+
+frontend:
+  image: frontend
+  tag: "latest"
+  port: 3000
+
+service:
+  type: LoadBalancer
+  apiPort: 8000
+  frontendPort: 3000
+
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: api.example.com
+      paths:
+        - /
+    - host: frontend.example.com
+      paths:
+        - /
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
