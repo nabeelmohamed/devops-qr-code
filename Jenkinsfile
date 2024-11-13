@@ -24,16 +24,13 @@ pipeline {
                 }
             }
         }
-        stage('Deploy API') {
+        stage('Deploy Backend') {
             steps {
                 withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
                     sh '''
                       aws eks update-kubeconfig --name my-cluster --region us-east-1
                       helm upgrade --install backend ./helm/my-application \
                         --namespace default \
-                        --set image.repository=your-docker-hub-username/backend \
-                        --set image.tag=${env.BUILD_NUMBER} \
-                        --set service.type=LoadBalancer \
                         --values ./helm/values.yaml
                     '''
                 }
@@ -46,9 +43,6 @@ pipeline {
                       aws eks update-kubeconfig --name my-cluster --region us-east-1
                       helm upgrade --install frontend ./helm/my-application \
                         --namespace default \
-                        --set image.repository=your-docker-hub-username/frontend \
-                        --set image.tag=${env.BUILD_NUMBER} \
-                        --set service.type=LoadBalancer \
                         --values ./helm/values.yaml
                     '''
                 }
