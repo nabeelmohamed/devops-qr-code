@@ -1,20 +1,20 @@
 resource "aws_instance" "jump_server" {
-  ami                         = "ami-0c55b159cbfafe1f0"  # Update this to the latest Amazon Linux 2 AMI
+  ami                         = data.aws_ami.ami.id
   instance_type               = "t2.micro"
-  subnet_id                   = aws_subnet.public[0].id
+  subnet_id                   = aws_subnet.public-subnet.id
   associate_public_ip_address = true
-  key_name                    = "your-key-pair"  # Update this with your key pair name
+  key_name                    = var.key-name
   iam_instance_profile        = aws_iam_instance_profile.jump_instance_profile.name
 
-  user_data = file("tools-install.sh")  # User data script for installing tools
+  user_data = file("tools-install.sh")  # Ensure this script is in your Terraform directory
 
   tags = {
-    Name = "Jump-Server"
+    Name = var.instance-name
   }
 }
 
 resource "aws_security_group" "jump_server_sg" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.vpc.id
 
   ingress {
     from_port   = 22
@@ -31,6 +31,6 @@ resource "aws_security_group" "jump_server_sg" {
   }
 
   tags = {
-    Name = "Jump-Server-SG"
+    Name = "jump-server-sg"
   }
 }
