@@ -13,6 +13,8 @@ frontend:
   image: frontend
   tag: "latest"
   port: 3000
+imagePullSecrets:
+  -name: my-dockerhub-secret
 
 service:
   type: LoadBalancer
