@@ -55,15 +55,15 @@ jobs:
         run: |
           trivy image your-docker-hub-username/frontend:${{ github.sha }}
 
-      - name: Update Deployment Manifests
+      - name: Update Values File
         run: |
-          sed -i "s|image: your-docker-hub-username/backend:.*|image: your-docker-hub-username/backend:${{ github.sha }}|" k8s/backend-deployment.yaml
-          sed -i "s|image: your-docker-hub-username/frontend:.*|image: your-docker-hub-username/frontend:${{ github.sha }}|" k8s/frontend-deployment.yaml
+          sed -i "s|api.image:.*|api.image: your-docker-hub-username/backend:${{ github.sha }}|" k8s/values.yaml
+          sed -i "s|frontend.image:.*|frontend.image: your-docker-hub-username/frontend:${{ github.sha }}|" k8s/values.yaml
 
-      - name: Commit and Push Updated Manifests
+      - name: Commit and Push Updated Values File
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add k8s/templates/backend-deployment.yaml k8s/templates/frontend-deployment.yaml
-          git commit -m "Update deployment manifests with new image tags"
+          git add k8s/values.yaml
+          git commit -m "Update values.yaml with new image tags"
           git push
