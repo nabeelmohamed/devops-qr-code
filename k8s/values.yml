@@ -25,13 +25,18 @@ ingress:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+  namespace: default
   hosts:
-    - host: api.example.com
+    - host: devops.capstone.com
       paths:
-        - /
-    - host: frontend.example.com
-      paths:
-        - /
+        - path: /api
+          pathType: Prefix
+          service: api-service
+          port: 8000
+        - path: /frontend
+          pathType: Prefix
+          service: frontend-service
+          port: 3000
 
 resources: {}
 nodeSelector: {}
