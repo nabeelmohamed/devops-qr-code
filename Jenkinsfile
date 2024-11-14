@@ -24,25 +24,30 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Backend') {
+        }
+        stage('Deploy API with Helm') {
             steps {
-                withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
-                    sh '''
-                      aws eks update-kubeconfig --name my-cluster --region us-east-1
-                      helm upgrade --install api ./k8s --set api.image=your-docker-hub-username/backend --set api.tag=latest
-                        --namespace default \
-                    '''
+                script {
+                    def API_IMAGE_TAG = "api-${env.BUILD_ID}"
+                    withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
+                        sh """
+                          aws eks update-kubeconfig --name my-cluster --region us-east-1
+                          helm upgrade --install api ./k8s --set api.image=your-docker-hub-username/backend --set api.tag=${API_IMAGE_TAG} --namespace default
+                        """
+                    }
                 }
             }
         }
-        stage('Deploy Frontend') {
+        stage('Deploy Frontend with Helm') {
             steps {
-                withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
-                    sh '''
-                      aws eks update-kubeconfig --name my-cluster --region us-east-1
-                      helm upgrade --install frontend ./k8s --set frontend.image=your-docker-hub-username/frontend --set frontend.tag=latest
-                        --namespace default \
-                    '''
+                script {
+                    def FRONTEND_IMAGE_TAG = "frontend-${env.BUILD_ID}"
+                    withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
+                        sh """
+                          aws eks update-kubeconfig --name my-cluster --region us-east-1
+                          helm upgrade --install frontend ./k8s --set frontend.image=your-docker-hub-username/frontend --set frontend.tag=${FRONTEND_IMAGE_TAG} --namespace default
+                        """
+                    }
                 }
             }
         }
