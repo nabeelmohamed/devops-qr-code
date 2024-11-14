@@ -18,4 +18,6 @@ spec:
       - name: api
         image: "{{ .Values.image.repository }}/{{ .Values.api.image }}:{{ .Values.api.tag }}"
         ports:
-        - containerPort: {{ .Values.api.port }}
+      - containerPort: {{ .Values.api.port }}
+        imagePullSecrets: 
+        - name: {{ .Values.imagePullSecrets[0].name }}
