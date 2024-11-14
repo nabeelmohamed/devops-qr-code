@@ -37,13 +37,15 @@ jobs:
 
       - name: Build and Push API Image
         run: |
-          docker build -t your-docker-hub-username/backend:${{ github.sha }} ./api
-          docker push your-docker-hub-username/backend:${{ github.sha }}
+          IMAGE_TAG=api-${{ github.sha }}
+          docker build -t your-docker-hub-username/backend:$IMAGE_TAG ./api
+          docker push your-docker-hub-username/backend:$IMAGE_TAG
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t your-docker-hub-username/frontend:${{ github.sha }} ./front-end-nextjs
-          docker push your-docker-hub-username/frontend:${{ github.sha }}
+          IMAGE_TAG=frontend-${{ github.sha }}
+          docker build -t your-docker-hub-username/frontend:$IMAGE_TAG ./front-end-nextjs
+          docker push your-docker-hub-username/frontend:$IMAGE_TAG
 
       - name: Trivy Scan for API Image
         run: |
