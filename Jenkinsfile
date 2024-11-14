@@ -29,9 +29,8 @@ pipeline {
                 withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
                     sh '''
                       aws eks update-kubeconfig --name my-cluster --region us-east-1
-                      helm upgrade --install backend ./helm/my-application \
+                      helm upgrade --install api ./k8s --set api.image=your-docker-hub-username/backend --set api.tag=latest
                         --namespace default \
-                        --values ./helm/values.yaml
                     '''
                 }
             }
@@ -41,9 +40,8 @@ pipeline {
                 withEnv(["PATH+HELM=${HELM_HOME}/bin", "PATH+AWS=${AWS_CLI}/bin"]) {
                     sh '''
                       aws eks update-kubeconfig --name my-cluster --region us-east-1
-                      helm upgrade --install frontend ./helm/my-application \
+                      helm upgrade --install frontend ./k8s --set frontend.image=your-docker-hub-username/frontend --set frontend.tag=latest
                         --namespace default \
-                        --values ./helm/values.yaml
                     '''
                 }
             }
