@@ -11,6 +11,7 @@ on:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,19 +27,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: SonarQube Analysis for API
+      - name: SonarQube Analysis
         run: |
           sonar-scanner \
-          -Dsonar.projectKey=api \
-          -Dsonar.sources=./api \
-          -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} \
-          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
-
-      - name: SonarQube Analysis for Frontend
-        run: |
-          sonar-scanner \
-          -Dsonar.projectKey=frontend \
-          -Dsonar.sources=./front-end-nextjs \
+          -Dsonar.projectKey=devops-qr-code \
+          -Dsonar.sources=api,front-end-nextjs \
           -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} \
           -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
 
