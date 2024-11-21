@@ -132,12 +132,12 @@ Use a sed command in the workflow to update the Docker image tag in the Kubernet
 
 ## Jenkins Pipeline to Deploy Using Helm
 
-Ensures your Jenkins have the nexessary plugins and credentials for the pipeline to be successfull.
-The Jenkins pipeline is responsible for deploying the newly updated Docker images to Kubernetes cluster in aws using Helm. This ensures that your applications are always up-to-date with the latest code changes.
+ - Ensures your Jenkins have the nexessary plugins and credentials for the pipeline to be successfull.
+ - The Jenkins pipeline is responsible for deploying the newly updated Docker images to Kubernetes cluster in aws using Helm. This ensures that your applications are always up-to-date with the latest code changes.
 
 ---
 
-# Workflow Dispatch for Terraform Updates
+### Workflow Dispatch for Terraform Updates
 
 ## Step 5: Future Terraform Updates
 
