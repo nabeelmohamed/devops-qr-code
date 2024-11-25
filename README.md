@@ -128,8 +128,39 @@ helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
 
 ### Update Docker Image in the deployment Manifest
 Use a sed command in the workflow to update the Docker image tag in the Kubernetes deployment configuration file:
-### Continuous Delivery Setup
+# Continuous Delivery Setup
+ 
+## Add Docker Hub Secret and Patch Service Account
 
+To ensure that your Jenkins pipeline can deploy applications to your Kubernetes cluster, you need to add a Docker Hub secret and patch the default service account in your cluster. Follow these steps to configure the necessary secret and patching.
+
+---
+
+### Adding Docker Hub Secret
+
+Run the following commands from your jump server or Jenkins server:
+
+### 1. Create Docker Hub Secret
+
+Replace `<docker-username>`, `<docker-password>`, and `<docker-email>` with your Docker Hub credentials.
+
+```bash
+kubectl create secret docker-registry my-dockerhub-secret \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=<docker-username> \
+  --docker-password=<docker-password> \
+  --docker-email=<docker-email> \
+  -n default
+```
+### 2. Patch Default Service Account
+
+Use the following command to link the secret to the `default` service account. This will allow pods in the `default` namespace to pull images from your private Docker Hub repository.
+
+```bash
+kubectl patch serviceaccount default \
+  -p '{"imagePullSecrets": [{"name": "my-dockerhub-secret"}]}' \
+  -n default
+```
 ## Jenkins Pipeline to Deploy Using Helm
 
  - Ensures your Jenkins have the nexessary plugins and credentials for the pipeline to be successfull.
@@ -137,9 +168,9 @@ Use a sed command in the workflow to update the Docker image tag in the Kubernet
 
 ---
 
-### Workflow Dispatch for Terraform Updates
+## Workflow Dispatch for Terraform Updates
 
-## Step 5: Future Terraform Updates
+## Future Terraform Updates
 
 Create a separate GitHub Actions workflow file specifically for Terraform updates. This workflow will be triggered when there is changes in the `.tf ` ,and target is set by the input method using the `workflow_dispatch` method.
 ### Final Notes
